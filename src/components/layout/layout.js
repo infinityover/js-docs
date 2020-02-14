@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from "react"
+import React, { useState } from "react"
 
 import { Helmet } from "react-helmet"
 
 import { GlobalStyle } from "../../theme/globalStyle"
 
-import Corner from '../corner/index'
+import Corner from "../corner/index"
 
 import {
   Container,
+  HamburgerWrapper,
   Hamburger,
   ContainerMenu,
   ContainerLink,
-  Title,
   ContainerContent,
   ContentMenu,
   StyledLink,
-  CloseButton,
   ContainerHamburguer,
-  FadeIn,
-  ToggleButton,
+  HamburgerLine,
+  MenuHamburgerWrapper,
+  TitleMenu,
+  ContentHeader,
+  ContentHeaderHamburger,
+  MenuItems,
 } from "./styles"
 
 import Footer from "../footer/index"
@@ -30,12 +33,7 @@ const SidebarItems = props => (
 )
 
 const Layout = ({ children }) => {
-  const [isVisible, setIsVisible] = useState(false)
-  const [isSetupComplete, setIsSetupComplete] = useState(false)
-
-  useEffect(() => {
-    setIsSetupComplete(true);
-  },[isSetupComplete])
+  const [isOpened, setIsOpened] = useState(false)
 
   return (
     <Container>
@@ -59,41 +57,45 @@ const Layout = ({ children }) => {
         />
       </Helmet>
       <GlobalStyle />
-      {isVisible ? (
-        <>
-          <ContainerMenu>
-            <Title>JavaScript Doc's</Title>
-            <FadeIn>
-              <ContentMenu onClick={() => setIsVisible(!isVisible)}>
-                <SidebarItems to="/">Home</SidebarItems>
-                <SidebarItems to="/destructuring"  activeClassName="active">Destructuring</SidebarItems>
-                <SidebarItems to="/function">Function</SidebarItems>
-                <SidebarItems to="/ternary-operator">
-                  Ternary Operator
-                </SidebarItems>
-                <SidebarItems to="/if-else/">If Else</SidebarItems>
-                <SidebarItems to="/for/">Loop For</SidebarItems>
-                <SidebarItems to="/spread-operator/">Spread Operator</SidebarItems>
-                <CloseButton
-                  onClick={() => setIsVisible(!isVisible)}
-                ></CloseButton>
-              </ContentMenu>
-            </FadeIn>
-            <Footer made="Made with" />
-          </ContainerMenu>
-          <ToggleButton onClick={() => setIsVisible(!isVisible)} />
-        </>
-      ) : (
-        <ContainerHamburguer>
-          <FadeIn>
-            <Hamburger onClick={() => setIsVisible(!isVisible)} />
-          </FadeIn>
-        </ContainerHamburguer>
-      )}
+      <>
+        <MenuHamburgerWrapper onClick={() => setIsOpened(!isOpened)}
+          className={isOpened ? "opened" : "closed"}>
+          <ContainerHamburguer />
+        </MenuHamburgerWrapper>
+        {isOpened ? (
+        <ContainerMenu>
+          <ContentHeader>
+            <ContentHeaderHamburger />
+          </ContentHeader>
+            <TitleMenu>JavaScript Doc's</TitleMenu>
+          <ContentMenu>
+            <MenuItems onClick={() => setIsOpened(!isOpened)}>
+              <SidebarItems to="/" activeClassName="active">
+                Home
+              </SidebarItems>
+              <SidebarItems to="/destructuring">Destructuring</SidebarItems>
+              <SidebarItems to="/function">Function</SidebarItems>
+              <SidebarItems to="/ternary-operator">Ternary Operator</SidebarItems>
+              <SidebarItems to="/if-else">If Else</SidebarItems>
+              <SidebarItems to="/for">Loop For</SidebarItems>
+              <SidebarItems to="/array-helpers">Array Helpers</SidebarItems>
+              <SidebarItems to="/spread-operator">Spread Operator</SidebarItems>
+            </MenuItems>
+          </ContentMenu>
+          <Footer made="Made with" />
+        </ContainerMenu>
+        ): null}
+        <HamburgerWrapper>
+          <Hamburger
+            className={isOpened ? "opened" : "closed"}
+            onClick={() => setIsOpened(!isOpened)}
+          >
+            <HamburgerLine className={isOpened ? "opened" : "closed"} />
+          </Hamburger>
+        </HamburgerWrapper>
+      </>
       <ContainerContent>{children}</ContainerContent>
-      {isSetupComplete ? (
-        <Corner />
-      ) : null }
+      <Corner />
     </Container>
   )
 }
